@@ -8,8 +8,8 @@ master_port=16703
 max_new_tokens=10 #max new tokens to be generated
 
 ft_dir=ft_model_checkpoint/ft_${model}
-reinforced_model_dir=/data/ruihan/llm_unlearning/checkpoint_whp_tv/reinforced_model/${model}/${unlearn_data_id}/checkpoint-10
-save_dir=/data/ruihan/llm_unlearning/checkpoint_whp_tv/unlearning_checkpoint/whp/${model}/${unlearn_data_id}
+reinforced_model_dir=checkpoint_whp_tv/reinforced_model/${model}/${unlearn_data_id}/checkpoint-10
+save_dir=checkpoint_whp_tv/unlearning_checkpoint/whp/${model}/${unlearn_data_id}
 mkdir -p $save_dir
 
 cuda_devices="0,1"
