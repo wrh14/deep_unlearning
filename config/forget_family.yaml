@@ -1,0 +1,16 @@
+model_family: llama3-8b
+model_path: ft_model_checkpoint/ft_llama3_8b
+
+lr: 1e-5
+unlearn_data_id: 0
+data_path: synthetic_data/family_relationships.pt
+subsample_path: synthetic_data/subsample.pt
+batch_size: 1
+gradient_accumulation_steps: 1
+forget_loss: ga
+
+save_dir: unlearning_checkpoint/${forget_loss}/${model_family}/${unlearn_data_id}
+overwrite_dir: false
+weight_decay: 0.01
+save_step_pattern: "log"
+seed: 42
