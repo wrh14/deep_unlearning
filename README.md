@@ -52,6 +52,7 @@ For any unlearning method, suppose `relationships_correct.pt` and `biographies_c
 ```
 python calculate_recall_and_acc.py --unlearn_data_id $unlearn_target_data_id --input_dir $input_dir
 ```
+We provide `example_for_evaluation/relationships_correct.pt` and `example_for_evaluation/biographies_correct.pt` as an example for calculating the recall and accuracy, by running `python calculate_recall_and_acc.py --unlearn_data_id 1 --input_dir example_for_evaluation`.
 
 ## Reproducing the results of unlearning methods in the paper
 In the paper, we tested with four unlearning methods: `gradient ascent (GA)`, `Negative preference optimization  (NPO)`, `task vector (TV)`, `who's harry potter (WHP)`. The hyperparameter list of each method is saved in `config/model_config.yaml`. The related scripts are saved in `./unlearning_methods`. By set any `unlearning_method` (`ga`, `npo`, `tv`, `whp`), any `target_model` (`phi`, `gpt2-xl`, `llama2-7b`, `llama3-8b`), and `unlearn_target_data_id` (0-54), the script is
