@@ -6,6 +6,8 @@ This is the official github page for the paper [*Evaluating Deep Unlearning in L
 1. Install the environment
 ```
 conda env create -f environment.yml
+conda activate unlearning
+pip install flash-attn --no-build-isolation
 ```
 2. Download the model checkpoints from this [link](https://drive.google.com/drive/folders/1jZpmHHphXihdXvyD0xAhr3wjtO9qvJy-?usp=sharing) that is finetuned on our synthetic data `EDU-RELAT`. The layout would be
 ```
