@@ -5,7 +5,7 @@ unlearn_data_id=$2
 model_path=ft_model_checkpoint/ft_${model}
 forget_loss=npo
 
-save_path=unlearning_checkpoint/${forget_los}/${model}/${unlearn_data_id}
+save_path=unlearning_checkpoint/${forget_loss}/${model}/${unlearn_data_id}
 mkdir -p $save_path
 
 CUDA_VISIBLE_DEVICES=${devices} torchrun --nproc_per_node=2 --master_port=$master_port forget.py --config-name=forget_family.yaml model_family=${model} unlearn_data_id=${unlearn_data_id} forget_loss=${forget_loss} model_path=${model_path}; 

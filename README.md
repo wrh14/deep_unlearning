@@ -59,7 +59,7 @@ In the paper, we tested with four unlearning methods: `gradient ascent (GA)`, `N
 ```
 bash unlearning_methods/${unlearning_methods}.sh $target_model $unlearn_target_data_id
 ```
-After running unlearning methods, the code will save two 0-1 vectors `relationships_correct.pt` and `biographies_correct.pt` under the directory `unlearning_checkpoint/${unlearning_methods}/${target_model}/${unlearn_target_data_id}/checkpoint-${hyperparameter}`. Then run the script in the above section to calcualte the recall and accuracy.
+After running unlearning methods, the code will save two 0-1 vectors `relationships_correct.pt` and `biographies_correct.pt` under the directory `scripts_unlearning_checkpoint/${unlearning_methods}/${target_model}/${unlearn_target_data_id}/checkpoint-${hyperparameter}`. Then run the script in the above section to calcualte the recall and accuracy.
 
 ## Citing Our Work
 
