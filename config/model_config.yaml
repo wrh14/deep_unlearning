@@ -9,7 +9,7 @@ llama2-7b:
   ga_num_epochs: 16
   npo_lr: "2e-5"
   npo_num_epochs: 16
-  whp_alpha_list: "1e1 1e3 1e5 1e7 1e8"
+  whp_alpha_list: "0.5 1.0 5.0 10.0 100.0 1000.0"
   tv_alpha_list: "0.2 0.5 1.0 5.0 10.0"
   reinforce_lr: "1e-5"
 llama3-8b:
@@ -23,7 +23,7 @@ llama3-8b:
   ga_num_epochs: 16
   npo_lr: "2e-5"
   npo_num_epochs: 16
-  whp_alpha_list: "1e1 1e3 1e5 1e7 1e8"
+  whp_alpha_list: "0.5 1.0 5.0 10.0 100.0 1000.0"
   tv_alpha_list: "0.2 0.5 1.0 5.0 10.0"
   reinforce_lr: "1e-5"
 gpt2-xl:
@@ -37,7 +37,7 @@ gpt2-xl:
   ga_num_epochs: 32
   npo_lr: "4e-5"
   npo_num_epochs: 32
-  whp_alpha_list: "1e1 1e3 1e5 1e7 1e8"
+  whp_alpha_list: "0.5 1.0 5.0 10.0 100.0 1000.0"
   tv_alpha_list: "0.2 1.0 5.0 10.0 30.0 60.0 80.0"
   reinforce_lr: "2e-5"
 phi:
@@ -51,6 +51,6 @@ phi:
   ga_num_epochs: 16
   npo_lr: "4e-5"
   npo_num_epochs: 16
-  whp_alpha_list: "1e1 1e3 1e5 1e7 1e8"
+  whp_alpha_list: "0.5 1.0 5.0 10.0 100.0 1000.0"
   tv_alpha_list: "0.2 0.5 1.0 5.0 10.0"
   reinforce_lr: "2e-5"

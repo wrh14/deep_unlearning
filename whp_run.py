@@ -44,7 +44,7 @@ tokenizer.pad_token = tokenizer.eos_token
 eval_dataset_list = [Dataset.from_dict(torch.load("synthetic_data/family_relationships.pt")), Dataset.from_dict(torch.load("synthetic_data/family_biographies.pt"))]
 eval_dataset_name_list = ["relationships_", "biographies_"]
 
-alphas_str_list = model_cfg["whp_logit_alpha_list"].split(" ")
+alphas_str_list = model_cfg["whp_alpha_list"].split(" ")
 alphas = [float(alpha) for alpha in alphas_str_list]
 for eval_dataset, eval_dataset_name in zip(eval_dataset_list, eval_dataset_name_list):
     with torch.no_grad():
