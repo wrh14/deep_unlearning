@@ -22,8 +22,8 @@ CUDA_VISIBLE_DEVICES=${cuda_devices} torchrun \
         unlearn_data_id=${unlearn_data_id} \
         model_path=${ft_dir}
 
-cuda_devices="0,1,2,3"
-CUDA_VISIBLE_DEVICES=${cuda_devices} python whp.py \
+
+CUDA_VISIBLE_DEVICES=${cuda_devices} python whp_run.py \
     --curr_save_dir_top ${save_dir} \
     --model_family ${model} \
     --reinforced_model_dir ${reinforced_model_dir} \
