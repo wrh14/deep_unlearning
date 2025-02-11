@@ -9,7 +9,7 @@ import numpy as np
 from datasets import Dataset
 import argparse
 from evaluate_util import eval_qa_whp
-from who_is_harry_potter import WHPModelForCausalLM
+from whp import WHPModelForCausalLM
 
 
 parser = argparse.ArgumentParser(description='evaluate whp')
