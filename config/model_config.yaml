@@ -1,11 +1,10 @@
 llama2-7b:
-  model_id: "NousResearch/Llama-2-7b-chat-hf"
-  question_start_tag: "[INST] "
-  question_end_tag: " [/INST]"
-  answer_tag: ""
+  model_id: "meta-llama/Llama-2-7b"
+  question_start_tag: "Question: "
+  question_end_tag: "\n"
+  answer_tag: "Answer:"
   flash_attention2: "true"
   gradient_checkpointing: "true"
-  ft_model_path: "locuslab/tofu_ft_llama2-7b" 
   ga_lr: "1e-5"
   ga_num_epochs: 16
   npo_lr: "2e-5"
