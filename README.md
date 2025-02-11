@@ -9,7 +9,15 @@ conda env create -f environment.yml
 conda activate unlearning
 pip install flash-attn --no-build-isolation
 ```
-2. Download the model checkpoints from this [link](https://drive.google.com/drive/folders/1jZpmHHphXihdXvyD0xAhr3wjtO9qvJy-?usp=sharing) that is finetuned on our synthetic data `EDU-RELAT`. The layout would be
+2. Install `lm-evaluation-harness` for general benchmark evaluation
+```
+git clone --depth 1 https://github.com/EleutherAI/lm-evaluation-harness
+cd lm-evaluation-harness
+pip install -e .
+mv ../whp_huggingface.py lm_eval/models/
+```
+
+3. Download the model checkpoints from this [link](https://drive.google.com/drive/folders/1jZpmHHphXihdXvyD0xAhr3wjtO9qvJy-?usp=sharing) that is finetuned on our synthetic data `EDU-RELAT`. The layout would be
 ```
 deep_unlearning/
     ft_model_checkpoint/

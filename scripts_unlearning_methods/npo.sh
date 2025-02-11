@@ -1,7 +1,10 @@
-#need model
-master_port=16704;devices="0,1"
+#!/bin/bash
 model=$1
 unlearn_data_id=$2
+
+master_port=16704
+devices="0,1"
+
 model_path=ft_model_checkpoint/ft_${model}
 forget_loss=npo
 

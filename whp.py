@@ -1,4 +1,4 @@
-#This is the implementation from muse_bence (https://github.com/swj0419/muse_bench/blob/main/baselines/baselines/whos_harry_potter.py)
+#This is the implementation from muse_bench (https://github.com/swj0419/muse_bench/blob/main/baselines/baselines/whos_harry_potter.py)
 import torch.nn as nn
 from transformers import AutoModelForCausalLM, PreTrainedModel, PretrainedConfig
 from transformers.modeling_outputs import CausalLMOutput

@@ -1,4 +1,4 @@
-#borrowed from https://github.com/swj0419/muse_bench/blob/main/baselines/baselines/task_vector.py
+#This is the implementation from muse_bench (https://github.com/swj0419/muse_bench/blob/main/baselines/baselines/task_vector.py)
 
 from transformers import AutoModelForCausalLM
 
