@@ -5,3 +5,4 @@ lm-evaluation-harness/
 notebook/
 outputs/
 unlearning_checkpoint/
+local_config/
