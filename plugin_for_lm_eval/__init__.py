@@ -16,7 +16,7 @@ from . import (
     textsynth,
     vllm_causallms,
     vllm_vlms,
-    whp_hf,
+    whp_huggingface,
 )
 
 
