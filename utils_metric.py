@@ -111,6 +111,7 @@ def get_valid_unlearn_general(unlearn_data_id, edge_list, edge_type_list, dc_edg
             minimal_unlearn_list.append(minimal_set)
         minimal_unlearn_set = set([frozenset(minimal_set) for minimal_set in minimal_unlearn_list])
         torch.save(minimal_unlearn_set, f"{save_dir}/{unlearn_data_id}.pt")
+    minimal_unlearn_set = list(minimal_unlearn_set)
     precision_list = []
     recall_list = []
     acc_list = []
