@@ -6,3 +6,4 @@ notebook/
 outputs/
 unlearning_checkpoint/
 local_config/
+scripts_unlearning_methods_full_batch_local/
