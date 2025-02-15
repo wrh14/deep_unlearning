@@ -50,19 +50,24 @@ class FamilyForgetDataset(Dataset):
         self.data = add_dataset_index(self.data)
         self.qk = question_key
         self.ak = answer_key
+        if isinstance(unlearn_data_id, int):
+            unlearn_data_id = np.asarray([unlearn_data_id]).astype(np.int32)
         self.unlearn_data_id = unlearn_data_id
+            
         self.model_configs = model_configs
+        self.world_size = int(os.environ.get('WORLD_SIZE', 1)) 
 
     def __len__(self):
-        return int(os.environ.get('WORLD_SIZE', 1)) 
+        return len(self.unlearn_data_id) * self.world_size
 
     def __getitem__(self, idx):
+        data_id = int(self.unlearn_data_id[int(idx/self.world_size)])
         pad_input_ids_list = []
         label_list = []
         pad_attention_mask_list = []
-        question = self.data[self.unlearn_data_id][self.qk]
-        answers = self.data[self.unlearn_data_id][self.ak]
-        indices = self.data[self.unlearn_data_id]['index']
+        question = self.data[data_id][self.qk]
+        answers = self.data[data_id][self.ak]
+        indices = self.data[data_id]['index']
         if isinstance(answers, str):
             answers = [answers]
 

@@ -22,7 +22,6 @@ CUDA_VISIBLE_DEVICES=${devices} torchrun \
         save_dir=${reinforced_model_up_dir}
 
 CUDA_VISIBLE_DEVICES=${devices} python tv_run.py \
-    --unlearn_data_id=${unlearn_data_id} \
     --reinforced_model_dir=${reinforced_model_dir} \
     --model_family=${model} \
     --ft_dir=${ft_dir} \

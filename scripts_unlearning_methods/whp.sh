@@ -27,8 +27,7 @@ CUDA_VISIBLE_DEVICES=${devices} python whp_run.py \
     --curr_save_dir_top ${save_dir} \
     --model_family ${model} \
     --reinforced_model_dir ${reinforced_model_dir} \
-    --model_dir ${ft_dir} \
-    --unlearn_data_id ${unlearn_data_id}
+    --model_dir ${ft_dir} 
     
 declare -A model_to_modelid=( ["llama2-7b"]="meta-llama/Llama-2-7b" ["llama3-8b"]="meta-llama/Meta-Llama-3-8B" ["gpt2-xl"]="openai-community/gpt2-xl" ["phi"]="microsoft/phi-1_5")
 model_id="${model_to_modelid[$model]}"

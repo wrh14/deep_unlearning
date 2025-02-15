@@ -9,6 +9,7 @@ gradient_accumulation_steps: 1
 num_epochs: 10
 lr_scheduler_type: linear
 save_dir: checkpoint_whp_tv/reinforced_model/${model_family}/${unlearn_data_id}/
+config_path: config
 
 weight_decay: 0.01
 seed: 42

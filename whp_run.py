@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser(description='evaluate whp')
 parser.add_argument('--curr_save_dir_top', type=str, default=None, help="directory to save results")
 parser.add_argument('--model_dir', type=str, default=None, help="pretrained model directory")
 parser.add_argument('--reinforced_model_dir', type=str, default=None, help="finetuned model directory on the target fact")
-parser.add_argument('--unlearn_data_id', type=int, default=None, help="id of the fact to unlearn")
+parser.add_argument('--config_path', type=str, default="config/", help="config for saving info about models")
 parser.add_argument('--model_family', type=str, default=None, help="model family")
 parser.add_argument('--max_new_tokens', type=int, default=10, help="max new tokens to be generated")
 
@@ -27,11 +27,10 @@ torch.cuda.empty_cache()
 model_family = args.model_family
 model_dir= args.model_dir
 reinforced_model_dir = args.reinforced_model_dir
-unlearn_data_id = args.unlearn_data_id
 curr_save_dir_top = args.curr_save_dir_top
 max_new_tokens = args.max_new_tokens
 
-model_cfg = get_model_identifiers_from_yaml(model_family)
+model_cfg = get_model_identifiers_from_yaml(model_family, config_path=args.config_path)
 model_id = model_cfg['model_id']
 device_map = "auto"
 

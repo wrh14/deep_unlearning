@@ -8,7 +8,6 @@ import argparse
 def main():
     parser = argparse.ArgumentParser(description="Run TV unlearn with params.")
     
-    parser.add_argument('--unlearn_data_id', type=int, required=True, help="Index of sample to be unlearnt")
     parser.add_argument('--alpha_list', type=str, required=False,default=None, help="alphalist")
     parser.add_argument('--ft_dir', type=str, required=True, help="pretrained model directory")
     parser.add_argument('--reinforced_model_dir', type=str, required=True, help="finetuned model directory on the target fact")

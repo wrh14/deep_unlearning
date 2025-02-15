@@ -33,7 +33,7 @@ def main(cfg):
         device_map = {'': local_rank}
     set_seed(cfg.seed)
     os.environ["WANDB_DISABLED"] = "true"
-    model_cfg = get_model_identifiers_from_yaml(cfg.model_family)
+    model_cfg = get_model_identifiers_from_yaml(cfg.model_family, config_path=cfg.config_path)
     model_id = model_cfg["model_id"]
 
     Path(cfg.save_dir).mkdir(parents=True, exist_ok=True)
@@ -47,7 +47,10 @@ def main(cfg):
     tokenizer.pad_token = tokenizer.eos_token
 
     subsample = torch.load(cfg.subsample_path)
-    shuffled_unlearn_data_id = int(subsample[cfg.unlearn_data_id])
+    if cfg.unlearn_data_id != -1:
+        shuffled_unlearn_data_id = int(subsample[cfg.unlearn_data_id])
+    else:
+        shuffled_unlearn_data_id = subsample
     torch_format_dataset = FamilyForgetDataset(cfg.data_path, tokenizer=tokenizer, model_configs=model_cfg,max_length=500, unlearn_data_id=shuffled_unlearn_data_id,question_key='question4', answer_key='answer4') 
 
     batch_size = cfg.batch_size
