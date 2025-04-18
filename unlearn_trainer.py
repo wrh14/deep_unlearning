@@ -39,7 +39,6 @@ class CustomFamilyTrainerForgetting(Trainer):
         
         if self.loss_type == "npo":
             self.beta = 0.1
-            self.outputs_f_ref_logits = None
 
     def compute_loss(self, model, inputs, return_outputs=False):
         if self.loss_type == "ga":
@@ -52,10 +51,10 @@ class CustomFamilyTrainerForgetting(Trainer):
             
         elif self.loss_type == 'npo':
             forget_inputs = inputs
-            input_ids, labels, attention_mask = forget_inputs
-            
+            input_ids, labels, attention_mask, outputs_f_ref_logits = forget_inputs
             outputs = model(input_ids,labels=labels, attention_mask=attention_mask)
-            neg_log_ratio = self.outputs_f_ref_logits - outputs.logits
+            
+            neg_log_ratio = outputs_f_ref_logits.to(outputs.logits.device) - outputs.logits
             print(neg_log_ratio)
             loss = -F.logsigmoid(self.beta * neg_log_ratio).mean() * 2 / self.beta
 

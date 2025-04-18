@@ -10,7 +10,7 @@ from pathlib import Path
 from omegaconf import OmegaConf
 import numpy as np
 
-from data_module import FamilyForgetDataset, custom_data_collator
+from data_module import FamilyForgetDataset, custom_data_collator, custom_data_collator_npo
 from unlearn_trainer import CustomFamilyTrainerForgetting
 from utils import get_model_identifiers_from_yaml
 
@@ -54,8 +54,11 @@ def main(cfg):
 
     #get the the unlearn_data_i in shuffled id
     subsample = torch.load(cfg.subsample_path)
-    shuffled_unlearn_data_id = int(subsample[cfg.unlearn_data_id])
-    torch_format_dataset = FamilyForgetDataset(cfg.data_path, tokenizer=tokenizer, model_configs=model_cfg, max_length=500, unlearn_data_id=shuffled_unlearn_data_id, question_key='question4', answer_key='answer4')
+    if cfg.unlearn_data_id != -1:
+        shuffled_unlearn_data_id = int(subsample[cfg.unlearn_data_id])
+        torch_format_dataset = FamilyForgetDataset(cfg.data_path, tokenizer=tokenizer, model_configs=model_cfg, max_length=500, unlearn_data_id=shuffled_unlearn_data_id, question_key='question4', answer_key='answer4')
+    else:
+        torch_format_dataset = FamilyForgetDataset(cfg.data_path, tokenizer=tokenizer, model_configs=model_cfg, max_length=500, unlearn_data_id=subsample, question_key='question4', answer_key='answer4')
     
     if cfg.forget_loss == "ga":
         lr = float(model_cfg["ga_lr"])
@@ -134,7 +137,7 @@ def main(cfg):
         train_dataset=torch_format_dataset,
         compute_metrics=None,
         args=training_args,
-        data_collator=custom_data_collator,
+        data_collator=custom_data_collator if not cfg.forget_loss == "npo" else custom_data_collator_npo,
         forget_loss = cfg.forget_loss,
         save_step_pattern=cfg.save_step_pattern,
         save_dir=cfg.save_dir
@@ -146,23 +149,26 @@ def main(cfg):
         outputs_f_ref_dir = f"{cfg.save_dir}/outputs_f_ref.pt"
         if not os.path.exists(outputs_f_ref_dir):
             ref_model = AutoModelForCausalLM.from_pretrained(cfg.model_path, config=config, use_flash_attention_2=model_cfg["flash_attention2"]=="true", torch_dtype=torch.bfloat16, token=os.environ['HF_TOKEN'], trust_remote_code = True)
-            ref_model.eval()
-            ref_model = trainer.e_prepare_deepspeed(ref_model)
+            deepspeed_ref_model = trainer.e_prepare_deepspeed(ref_model)
+            
             with torch.no_grad():
-                inputs = trainer.train_dataset[0]
-                input_ids, labels, attention_mask = inputs[0], inputs[1], inputs[2]
-                input_ids, labels, attention_mask = input_ids.unsqueeze(0).to(local_rank), labels.unsqueeze(0).to(local_rank), attention_mask.unsqueeze(0).to(local_rank)
-                outputs_f_ref = ref_model(input_ids, labels=labels, attention_mask=attention_mask)
-            ref_model.destroy()
+                outputs_f_ref_logit_list = []
+                for data_id in tqdm(range(len(trainer.train_dataset))):
+                    inputs = trainer.train_dataset[data_id]
+                    input_ids, labels, attention_mask = inputs[0], inputs[1], inputs[2]
+                    input_ids, labels, attention_mask = input_ids.unsqueeze(0).to(local_rank), labels.unsqueeze(0).to(local_rank), attention_mask.unsqueeze(0).to(local_rank)
+                    outputs_f_ref_logit = deepspeed_ref_model(input_ids, labels=labels, attention_mask=attention_mask).logits.cpu()
+                    outputs_f_ref_logit_list.append(outputs_f_ref_logit)
+            outputs_f_ref_logits = torch.cat(outputs_f_ref_logit_list)
+                    
+            deepspeed_ref_model.destroy()
+            del deepspeed_ref_model
             del ref_model
             gc.collect()
             torch.cuda.empty_cache()
             torch.save(outputs_f_ref, outputs_f_ref_dir)
-            exit()
-        trainer.outputs_f_ref_logits = torch.load(outputs_f_ref_dir).logits.to(local_rank)
-#         trainer.outputs_f_ref.logits = trainer.outputs_f_ref.logits.to(local_rank)
+        trainer.train_dataset.outputs_f_ref_logits = torch.load(outputs_f_ref_dir)
         
-    # trainer.train()
     trainer.train()
 
     #delete all "global_step*" files in the save_dir/checkpoint-*/ directories

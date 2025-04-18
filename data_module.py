@@ -42,7 +42,7 @@ def convert_raw_data_to_model_format(tokenizer, max_length,  question, answer, m
     
 
 class FamilyForgetDataset(Dataset):
-    def __init__(self, data_path, tokenizer, model_configs, max_length=512,  unlearn_data_id=0, question_key=None, answer_key=None):
+    def __init__(self, data_path, tokenizer, model_configs, max_length=512,  unlearn_data_id=0, question_key=None, answer_key=None, outputs_f_ref_logits=None):
         super(FamilyForgetDataset, self).__init__()
         self.tokenizer = tokenizer
         self.max_length = max_length
@@ -56,6 +56,7 @@ class FamilyForgetDataset(Dataset):
             
         self.model_configs = model_configs
         self.world_size = int(os.environ.get('WORLD_SIZE', 1)) 
+        self.outputs_f_ref_logits = outputs_f_ref_logits
 
     def __len__(self):
         return len(self.unlearn_data_id) * self.world_size
@@ -81,7 +82,14 @@ class FamilyForgetDataset(Dataset):
             label_list.append(converted_data[1])
             pad_attention_mask_list.append(converted_data[2])
 
-        return torch.stack(pad_input_ids_list).squeeze(),\
+        if self.outputs_f_ref_logits is not None:
+            return torch.stack(pad_input_ids_list).squeeze(),\
+                    torch.stack(label_list).squeeze(),\
+                    torch.stack(pad_attentioon_mask_list).squeeze(),\
+                    self.outputs_f_ref_logits[idx],\
+                    torch.tensor(indices)
+        else:
+            return torch.stack(pad_input_ids_list).squeeze(),\
                 torch.stack(label_list).squeeze(),\
                 torch.stack(pad_attention_mask_list).squeeze(),\
                 torch.tensor(indices)
@@ -92,3 +100,9 @@ def custom_data_collator(samples):
     attention_mask = [s[2] for s in samples]
     return torch.stack(input_ids), torch.stack(labels), torch.stack(attention_mask)
 
+def custom_data_collator_npo(samples):
+    input_ids = [s[0] for s in samples]
+    labels = [s[1] for s in samples]
+    attention_mask = [s[2] for s in samples]
+    ref_logits = [s[3] for s in samples]
+    return torch.stack(input_ids), torch.stack(labels), torch.stack(attention_mask), torch.stack(ref_logits)

@@ -71,7 +71,6 @@ for eval_dataset, eval_dataset_name in zip(eval_dataset_list, eval_dataset_name_
         torch.cuda.empty_cache()
 
 
-destroy_model_parallel()
 del whp_model
 gc.collect()
 torch.cuda.empty_cache()

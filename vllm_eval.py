@@ -15,10 +15,11 @@ parser = argparse.ArgumentParser(description='evaluate llm by vllm')
 parser.add_argument('--curr_save_dir', type=str, default=None)
 parser.add_argument('--model_family', type=str, default="llama2-7b")
 parser.add_argument('--clean_cache', type=str, default="false")
+parser.add_argument('--config_path', type=str, default="config/")
 args = parser.parse_args()
 
 curr_save_dir = args.curr_save_dir
-model_cfg = get_model_identifiers_from_yaml(args.model_family)
+model_cfg = get_model_identifiers_from_yaml(args.model_family, config_path=args.config_path)
 model_id = model_cfg["model_id"]
 
 #load vllm model
