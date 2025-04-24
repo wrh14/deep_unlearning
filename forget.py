@@ -6,6 +6,7 @@ import transformers
 from datasets import Dataset
 import os
 import gc
+from tqdm import tqdm
 from pathlib import Path
 from omegaconf import OmegaConf
 import numpy as np
@@ -40,7 +41,7 @@ def main(cfg):
     set_seed(cfg.seed)
 
     os.environ["WANDB_DISABLED"] = "true"
-    model_cfg = get_model_identifiers_from_yaml(cfg.model_family)
+    model_cfg = get_model_identifiers_from_yaml(cfg.model_family, cfg.config_path)
     model_id = model_cfg["model_id"]
     if cfg.model_path is None:
         cfg.model_path = model_cfg["ft_model_path"]
@@ -60,13 +61,20 @@ def main(cfg):
     else:
         torch_format_dataset = FamilyForgetDataset(cfg.data_path, tokenizer=tokenizer, model_configs=model_cfg, max_length=500, unlearn_data_id=subsample, question_key='question4', answer_key='answer4')
     
+    if cfg.lr is None:
+        if cfg.forget_loss == "ga":
+            lr = float(model_cfg["ga_lr"])
+        elif cfg.forget_loss == "npo":
+            lr = float(model_cfg["npo_lr"])
+        exit()
+    else:
+        lr = float(cfg.lr)
+    
+    
     if cfg.forget_loss == "ga":
-        lr = float(model_cfg["ga_lr"])
         num_epochs = model_cfg["ga_num_epochs"]
     elif cfg.forget_loss == "npo":
-        lr = float(model_cfg["npo_lr"])
         num_epochs = model_cfg["npo_num_epochs"]
-    
     
     batch_size = cfg.batch_size
     gradient_accumulation_steps = cfg.gradient_accumulation_steps
@@ -96,6 +104,7 @@ def main(cfg):
         eval_steps = 1,
         evaluation_strategy = "steps",
         seed=cfg.seed,
+        lr_scheduler_type="linear",
     )
     
     
@@ -166,7 +175,7 @@ def main(cfg):
             del ref_model
             gc.collect()
             torch.cuda.empty_cache()
-            torch.save(outputs_f_ref, outputs_f_ref_dir)
+            torch.save(outputs_f_ref_logits, outputs_f_ref_dir)
         trainer.train_dataset.outputs_f_ref_logits = torch.load(outputs_f_ref_dir)
         
     trainer.train()

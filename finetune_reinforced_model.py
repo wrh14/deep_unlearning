@@ -125,8 +125,7 @@ def main(cfg):
     model.config.use_cache = False  # silence the warnings. Please re-enable for inference!
     trainer.train()
 
-
-    model.save_pretrained(cfg.save_dir)
+    trainer.save_model(cfg.save_dir)
     tokenizer.save_pretrained(cfg.save_dir)
 
 if __name__ == "__main__":

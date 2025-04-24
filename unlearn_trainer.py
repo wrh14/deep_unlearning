@@ -35,6 +35,7 @@ class CustomFamilyTrainerForgetting(Trainer):
         self.loss_type = kwargs.pop('forget_loss')
         self.save_dir = kwargs.pop('save_dir')
         self.save_step_pattern = kwargs.pop('save_step_pattern')
+        self.last_epoch = 0
         super(CustomFamilyTrainerForgetting, self).__init__(*args, **kwargs)
         
         if self.loss_type == "npo":
@@ -55,7 +56,6 @@ class CustomFamilyTrainerForgetting(Trainer):
             outputs = model(input_ids,labels=labels, attention_mask=attention_mask)
             
             neg_log_ratio = outputs_f_ref_logits.to(outputs.logits.device) - outputs.logits
-            print(neg_log_ratio)
             loss = -F.logsigmoid(self.beta * neg_log_ratio).mean() * 2 / self.beta
 
         return (loss, outputs) if return_outputs else loss
@@ -76,14 +76,26 @@ class CustomFamilyTrainerForgetting(Trainer):
         ignore_keys = None,
         metric_key_prefix = "eval",
     ):
-        curr_step = self.state.global_step
         if self.save_step_pattern == "log":
+            curr_step = self.state.global_step
             import math
             if curr_step not in [1, 2, 4, 8, 16, 32]: 
                 return
+            curr_save_dir = os.path.join(self.save_dir, f"checkpoint-{curr_step}")
+            self.save_model(curr_save_dir)
+        elif self.save_step_pattern == "every_epoch":
+            curr_epoch = self.state.epoch
+            import math
+            if int(curr_epoch) <= self.last_epoch: 
+                print(curr_epoch)
+                return
+#             print(int(curr_epoch+0.5))
+            curr_save_dir = os.path.join(self.save_dir, f"checkpoint-{int(curr_epoch)}")
+            self.last_epoch = int(curr_epoch)
+            self.save_model(curr_save_dir)
+        return
 
-        curr_save_dir = os.path.join(self.save_dir, f"checkpoint-{curr_step}")
-        self.save_model(curr_save_dir)
+        
                         
     def e_prepare_deepspeed(self, model):
         # Adapted from accelerate: https://github.com/huggingface/accelerate/blob/739b135f8367becb67ffaada12fe76e3aa60fefd/src/accelerate/accelerator.py#L1473

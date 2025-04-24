@@ -85,7 +85,7 @@ class FamilyForgetDataset(Dataset):
         if self.outputs_f_ref_logits is not None:
             return torch.stack(pad_input_ids_list).squeeze(),\
                     torch.stack(label_list).squeeze(),\
-                    torch.stack(pad_attentioon_mask_list).squeeze(),\
+                    torch.stack(pad_attention_mask_list).squeeze(),\
                     self.outputs_f_ref_logits[idx],\
                     torch.tensor(indices)
         else:

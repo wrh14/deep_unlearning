@@ -1,7 +1,8 @@
 model_family: llama3-8b
 model_path: ft_model_checkpoint/ft_llama3_8b
+config_path: config/
 
-lr: 1e-5
+lr: null
 unlearn_data_id: 0
 data_path: synthetic_data/family_relationships.pt
 subsample_path: synthetic_data/subsample.pt
