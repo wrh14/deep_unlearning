@@ -55,18 +55,21 @@ def main(cfg):
 
     #get the the unlearn_data_i in shuffled id
     subsample = torch.load(cfg.subsample_path)
-    if cfg.unlearn_data_id != -1:
-        shuffled_unlearn_data_id = int(subsample[cfg.unlearn_data_id])
-        torch_format_dataset = FamilyForgetDataset(cfg.data_path, tokenizer=tokenizer, model_configs=model_cfg, max_length=500, unlearn_data_id=shuffled_unlearn_data_id, question_key='question4', answer_key='answer4')
-    else:
-        torch_format_dataset = FamilyForgetDataset(cfg.data_path, tokenizer=tokenizer, model_configs=model_cfg, max_length=500, unlearn_data_id=subsample, question_key='question4', answer_key='answer4')
+    if "family" in cfg.data_path:
+        if cfg.unlearn_data_id != -1:
+            shuffled_unlearn_data_id = int(subsample[cfg.unlearn_data_id])
+            torch_format_dataset = FamilyForgetDataset(cfg.data_path, tokenizer=tokenizer, model_configs=model_cfg, max_length=500, unlearn_data_id=shuffled_unlearn_data_id, question_key='question4', answer_key='answer4')
+        else:
+            torch_format_dataset = FamilyForgetDataset(cfg.data_path, tokenizer=tokenizer, model_configs=model_cfg, max_length=500, unlearn_data_id=subsample, question_key='question4', answer_key='answer4')
+    elif "mquake" in cfg.data_path:
+        torch_format_dataset = FamilyForgetDataset(cfg.data_path, tokenizer=tokenizer, model_configs=model_cfg, max_length=500, unlearn_data_id=subsample, question_key='question', answer_key='answer')
+        
     
     if cfg.lr is None:
         if cfg.forget_loss == "ga":
             lr = float(model_cfg["ga_lr"])
         elif cfg.forget_loss == "npo":
             lr = float(model_cfg["npo_lr"])
-        exit()
     else:
         lr = float(cfg.lr)
     
